@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/22ndbj/nginx-poc.git
+    repoURL: https://github.com/22ndbj/cd-incremental.git
     targetRevision: main
     path: argocd
   destination:
