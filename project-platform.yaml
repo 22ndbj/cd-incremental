@@ -9,13 +9,9 @@ spec:
     - https://github.com/22ndbj/nginx-poc.git
   destinations:
     - name: in-cluster
-      namespace: myapp-dev
-    - name: in-cluster
-      namespace: myapp-sit
+      namespace: myapp-*
     - name: cluster-2
-      namespace: myapp-uat
-    - name: cluster-2
-      namespace: myapp-prod
+      namespace: myapp-*
   # Needed because Applications use CreateNamespace=true
   clusterResourceWhitelist:
     - group: ""

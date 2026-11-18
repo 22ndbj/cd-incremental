@@ -5,39 +5,20 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
-  # Deleting the ApplicationSet must never delete running workloads
+  goTemplateOptions: ["missingkey=error"]   # a config.yaml missing a key fails loudly
   syncPolicy:
     preserveResourcesOnDeletion: true
+    applicationsSync: create-update          # removing a folder never deletes an app
   generators:
-    - list:
-        elements:
-          - env: dev
-            overlayDir: dev
-            valuesFile: dev-overwrite-values.yaml
-            cluster: in-cluster
-            autoSync: "true"
-          - env: sit
-            overlayDir: sit
-            valuesFile: sit-overwrite-values.yaml
-            cluster: in-cluster
-            autoSync: "true"
-          - env: uat
-            overlayDir: uat
-            valuesFile: uat-overwrite-values.yaml
-            cluster: cluster-2
-            autoSync: "false"
-          - env: prod
-            overlayDir: production
-            valuesFile: prod-overwrite-values.yaml
-            cluster: cluster-2
-            autoSync: "false"
+    - git:
+        repoURL: https://github.com/22ndbj/nginx-poc.git
+        revision: main
+        files:
+          - path: deploy-manifests/overlays/*/config.yaml
   template:
     metadata:
       name: "myapp-{{ .env }}"
-      labels:
-        app: myapp
-        env: "{{ .env }}"
+      labels: { app: myapp, env: "{{ .env }}" }
     spec:
       project: platform
       source:
@@ -46,21 +27,16 @@ spec:
         path: deploy-manifests/base
         helm:
           releaseName: myapp
-          # Paths are relative to "path"; ../ is allowed as long as it stays inside the repo
           valueFiles:
             - values.yaml
-            - "../overlays/{{ .overlayDir }}/{{ .valuesFile }}"
+            - "../overlays/{{ .path.basename }}/{{ .valuesFile }}"
       destination:
         name: "{{ .cluster }}"
         namespace: "myapp-{{ .env }}"
-  # Adds automated sync only where autoSync == "true"
   templatePatch: |
     spec:
       syncPolicy:
-        syncOptions:
-          - CreateNamespace=true
+        syncOptions: [CreateNamespace=true]
       {{- if eq .autoSync "true" }}
-        automated:
-          prune: true
-          selfHeal: true
+        automated: { prune: true, selfHeal: true }
       {{- end }}
