@@ -1,0 +1,6 @@
+apiVersion: v2
+name: myapp
+description: Nginx sample used to prove the Argo CD DEV/SIT/UAT/PROD flow
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

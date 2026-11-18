@@ -1,0 +1,23 @@
+# Defaults shared by every environment.
+# Each overlays/<env>/<env>-overwrite-values.yaml only lists what differs.
+
+environment: base          # shown on the web page; every overlay overrides it
+bannerColor: "#6b7280"     # page banner colour; every overlay overrides it
+
+replicaCount: 1
+
+image:
+  repository: nginx        # point to your registry mirror if Docker Hub is blocked
+  tag: "1.26-alpine"       # PROD baseline; DEV starts one version ahead
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 16Mi
+  limits:
+    memory: 64Mi
