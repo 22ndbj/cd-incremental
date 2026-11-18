@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Pilot platform applications (DEV, SIT, UAT, PROD)
   sourceRepos:
-    - https://github.com/22ndbj/nginx-poc.git
+    - https://github.com/22ndbj/cd-incremental.git
   destinations:
     - name: in-cluster
       namespace: myapp-*

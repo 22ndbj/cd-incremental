@@ -11,7 +11,7 @@ spec:
     applicationsSync: create-update          # removing a folder never deletes an app
   generators:
     - git:
-        repoURL: https://github.com/22ndbj/nginx-poc.git
+        repoURL: https://github.com/22ndbj/cd-incremental.git
         revision: main
         files:
           - path: deploy-manifests/overlays/*/config.yaml
@@ -22,7 +22,7 @@ spec:
     spec:
       project: platform
       source:
-        repoURL: https://github.com/22ndbj/nginx-poc.git
+        repoURL: https://github.com/22ndbj/cd-incremental.git
         targetRevision: main
         path: deploy-manifests/base
         helm:
