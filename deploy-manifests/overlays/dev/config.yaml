@@ -2,3 +2,5 @@ env: dev
 cluster: in-cluster
 autoSync: "true"
 valuesFile: config.yaml
+
+replicaCount: 2
