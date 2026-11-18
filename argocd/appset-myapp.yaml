@@ -15,6 +15,7 @@ spec:
     - git:
         repoURL: https://github.com/22ndbj/cd-incremental.git
         revision: main
+        requeueAfterSeconds: 30
         files:
           - path: deploy-manifests/overlays/*/config.yaml
 
