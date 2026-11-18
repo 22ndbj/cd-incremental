@@ -3,24 +3,35 @@ kind: ApplicationSet
 metadata:
   name: myapp
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]   # a config.yaml missing a key fails loudly
-  syncPolicy:
-    preserveResourcesOnDeletion: true
-    applicationsSync: create-update          # removing a folder never deletes an app
+  goTemplateOptions:
+    - missingkey=error
+
   generators:
     - git:
         repoURL: https://github.com/22ndbj/cd-incremental.git
         revision: main
         files:
           - path: deploy-manifests/overlays/*/config.yaml
+
   template:
     metadata:
-      name: "myapp-{{ .env }}"
-      labels: { app: myapp, env: "{{ .env }}" }
+      name: 'myapp-{{ .env }}'
+      labels:
+        app: myapp
+        env: '{{ .env }}'
+
     spec:
       project: platform
+
+      destination:
+        name: '{{ .cluster }}'
+        namespace: 'myapp-{{ .env }}'
+
       source:
         repoURL: https://github.com/22ndbj/cd-incremental.git
         targetRevision: main
@@ -29,14 +40,19 @@ spec:
           releaseName: myapp
           valueFiles:
             - values.yaml
-            - "../overlays/{{ .path.basename }}/{{ .valuesFile }}"
-      destination:
-        name: "{{ .cluster }}"
-        namespace: "myapp-{{ .env }}"
+            - '../overlays/{{ .path.basename }}/{{ .valuesFile }}'
+
   templatePatch: |
     spec:
       syncPolicy:
-        syncOptions: [CreateNamespace=true]
+        syncOptions:
+          - CreateNamespace=true
       {{- if eq .autoSync "true" }}
-        automated: { prune: true, selfHeal: true }
+        automated:
+          prune: true
+          selfHeal: true
       {{- end }}
+
+  syncPolicy:
+    applicationsSync: create-update
+    preserveResourcesOnDeletion: true
