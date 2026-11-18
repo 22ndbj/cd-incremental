@@ -1,4 +1,4 @@
 env: dev
 cluster: in-cluster
 autoSync: "true"
-valuesFile: dev-overwrite-values.yaml
+valuesFile: config.yaml
