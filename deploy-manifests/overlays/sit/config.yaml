@@ -1,0 +1,4 @@
+env: sit
+cluster: in-cluster
+autoSync: "true"
+valuesFile: sit-overwrite-values.yaml
