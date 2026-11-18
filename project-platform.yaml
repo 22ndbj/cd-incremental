@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform
+  namespace: argocd
+spec:
+  description: Pilot platform applications (DEV, SIT, UAT, PROD)
+  sourceRepos:
+    - https://github.com/22ndbj/nginx-poc.git
+  destinations:
+    - name: in-cluster
+      namespace: myapp-dev
+    - name: in-cluster
+      namespace: myapp-sit
+    - name: cluster-2
+      namespace: myapp-uat
+    - name: cluster-2
+      namespace: myapp-prod
+  # Needed because Applications use CreateNamespace=true
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
