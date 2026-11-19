@@ -3,4 +3,4 @@ cluster: in-cluster
 autoSync: "true"
 valuesFile: config.yaml
 
-replicaCount: 2
+replicaCount: 4
